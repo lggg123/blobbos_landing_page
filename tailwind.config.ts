@@ -11,6 +11,9 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        pinkish: '#FFC1E3',
+        softYellow: '#FFE99D',
+        softBlue: '#ADD8E6',
       },
     },
   },
