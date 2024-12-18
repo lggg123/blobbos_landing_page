@@ -26,6 +26,10 @@ export default {
         'sway-delayed': 'sway 3s ease-in-out 1.5s infinite',
       },
       keyframes: {
+        twinkle: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.3' },
+        },
         float: {
           '0%, 100%': { 
             transform: 'translateY(0) scale(1) rotate(0deg)',

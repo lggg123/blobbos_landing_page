@@ -6,6 +6,7 @@ import { Tree } from './Tree';
 import { House } from './House';
 import { CuteBlob } from './CuteBlob';
 import { LogoBlob } from './LogoBlob';
+import { FigmaBlob } from './FigmaBlob';
 
 // Types and Interfaces
 interface CardItem {
@@ -44,10 +45,34 @@ const CARD_ITEMS: CardItem[] = [
 
 const BlobbosAdventure: React.FC = () => {
   return (
-    <div className="relative w-full min-h-screen overflow-hidden flex flex-col">
+    <div 
+      className="min-h-screen relative overflow-hidden"
+      style={{
+        backgroundImage: `linear-gradient(to bottom,
+          #B8A29C 0%,
+          #B8A29C 10%,
+          #837E9B 20%,
+          #F3AD9B 40%,
+          #B8A29C 60%,
+          #B8A29C 100%
+        )`
+      }}
+    >
       {/* Background Layer */}
-      <div className="absolute inset-0 z-0">
-        <BackgroundScene />
+      <div className="absolute inset-0 opacity-50">
+        <div className="absolute inset-0 animate-twinkle">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white rounded-full"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animation: `twinkle ${1 + Math.random() * 2}s infinite`
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Scene Elements Layer */}
@@ -87,6 +112,13 @@ const BlobbosAdventure: React.FC = () => {
           expression="happy"
           delay="animate-float-delayed"
         />
+      </div>
+
+      {/* Figma Blob Layer */}
+      <div className="absolute inset-0 z-15">
+        <div className="absolute left-[10%] top-[25%] w-[200px]">
+          <FigmaBlob className="animate-float" />
+        </div>
       </div>
 
       {/* UI Layer */}
