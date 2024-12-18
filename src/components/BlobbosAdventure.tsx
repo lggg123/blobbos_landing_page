@@ -1,186 +1,233 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 
 // Types and Interfaces
-interface NavigationItem {
-  id: string;
-  label: string;
-  href: string;
-}
-
 interface CardItem {
   id: string;
   title: string;
-  description: string;
-  color: {
-    from: string;
-    to: string;
-  };
-}
-
-interface FloatingBlob {
-  position: {
-    top?: string;
-    bottom?: string;
-    left?: string;
-    right?: string;
-  };
-  size: {
-    width: string;
-    height: string;
-  };
+  icon: string;
   color: string;
-  delay?: string;
 }
-
-// Constants
-const NAVIGATION_ITEMS: NavigationItem[] = [
-  { id: 'home', label: 'Home', href: '/' },
-  { id: 'faq', label: 'FAQ', href: '/faq' },
-  { id: 'map', label: 'Map', href: '/map' }
-];
 
 const CARD_ITEMS: CardItem[] = [
   {
     id: 'mine',
     title: 'Mine',
-    description: 'Explore the mines',
-    color: { from: 'pink-400', to: 'purple-400' }
+    icon: '💎',
+    color: 'bg-pink-100'
   },
   {
     id: 'blob',
     title: 'Blob',
-    description: 'Meet your blob',
-    color: { from: 'pink-400', to: 'purple-400' }
+    icon: '🫧',
+    color: 'bg-blue-100'
   },
   {
-    id: 'adventure',
+    id: 'blobs-adventure',
     title: 'Blobs Adventure',
-    description: 'Start your journey',
-    color: { from: 'pink-400', to: 'purple-400' }
+    icon: '🎮',
+    color: 'bg-orange-100'
   },
   {
     id: 'store',
     title: 'Store',
-    description: 'Get new items',
-    color: { from: 'pink-400', to: 'purple-400' }
+    icon: '🏪',
+    color: 'bg-pink-100'
   }
 ];
 
-const FLOATING_BLOBS: FloatingBlob[] = [
-  {
-    position: { top: '5rem', left: '2.5rem' },
-    size: { width: 'w-20', height: 'h-20' },
-    color: 'bg-pink-400'
-  },
-  {
-    position: { bottom: '5rem', right: '2.5rem' },
-    size: { width: 'w-24', height: 'h-24' },
-    color: 'bg-purple-400',
-    delay: 'animation-delay-2000'
-  },
-  {
-    position: { top: '50%', left: '33.333333%' },
-    size: { width: 'w-16', height: 'h-16' },
-    color: 'bg-yellow-400',
-    delay: 'animation-delay-4000'
-  }
-];
+const BlobCharacter: React.FC<{
+  className?: string;
+  color: string;
+  delay?: string;
+}> = ({ className = '', color, delay = '' }) => {
+  return (
+    <div className={`absolute ${className}`}>
+      <div className={`relative ${delay}`}>
+        <svg
+          viewBox="0 0 200 200"
+          className="w-full h-full"
+        >
+          {/* Gradient Definition */}
+          <defs>
+            <radialGradient id={`blob-gradient-${color}`} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style={{ stopColor: color, stopOpacity: 0.9 }} />
+              <stop offset="85%" style={{ stopColor: color, stopOpacity: 0.7 }} />
+              <stop offset="100%" style={{ stopColor: color, stopOpacity: 0.4 }} />
+            </radialGradient>
+            {/* Glow Effect */}
+            <filter id="blob-glow">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feComposite in="blur" in2="SourceGraphic" operator="over" />
+            </filter>
+          </defs>
 
-// Components
-const NavigationDot: React.FC<{ color: string }> = ({ color }) => (
-  <div className={`w-3 h-3 rounded-full ${color}`} />
-);
+          {/* Glow Layer */}
+          <path
+            d="M 100 0 
+               C 130 0 150 20 170 50
+               C 190 80 200 100 190 130
+               C 180 160 150 200 100 200
+               C 50 200 20 160 10 130
+               C 0 100 10 80 30 50
+               C 50 20 70 0 100 0"
+            fill={color}
+            opacity="0.4"
+            filter="url(#blob-glow)"
+          />
 
-const NavigationButton: React.FC<{ item: NavigationItem }> = ({ item }) => (
-  <button
-    key={item.id}
-    className="px-4 py-2 rounded-full bg-white bg-opacity-30 text-pink-600 hover:bg-opacity-40 transition-all"
-  >
-    {item.label}
-  </button>
-);
-
-const FloatingBlob: React.FC<FloatingBlob> = ({ position, size, color, delay }) => (
-  <div
-    className={`absolute ${size.width} ${size.height} rounded-full ${color} opacity-50 animate-blob ${delay || ''}`}
-    style={position}
-  />
-);
-
-const ProgressBar: React.FC<{ progress: number }> = ({ progress }) => (
-  <div className="max-w-2xl mx-auto mb-12">
-    <div className="h-4 bg-white bg-opacity-30 rounded-full overflow-hidden">
-      <div
-        className="h-full bg-gradient-to-r from-pink-400 to-purple-400 rounded-full transition-all duration-500"
-        style={{ width: `${progress}%` }}
-      />
+          {/* Main Blob Layer */}
+          <path
+            d="M 100 0 
+               C 130 0 150 20 170 50
+               C 190 80 200 100 190 130
+               C 180 160 150 200 100 200
+               C 50 200 20 160 10 130
+               C 0 100 10 80 30 50
+               C 50 20 70 0 100 0"
+            fill={`url(#blob-gradient-${color})`}
+            className="animate-float"
+          />
+        </svg>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const BlobbosAdventure: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-300 via-purple-200 to-blue-200 relative overflow-hidden">
-      {/* Navigation */}
-      <nav className="flex justify-between items-center p-4">
-        <div className="flex items-center space-x-2">
-          <NavigationDot color="bg-yellow-400" />
-          <NavigationDot color="bg-pink-400" />
-          <NavigationDot color="bg-blue-400" />
+    <div className="min-h-screen bg-gradient-to-b from-pink-300 via-purple-400 to-[#8B9DC3] relative overflow-hidden">
+      {/* Corner Blobs */}
+      <BlobCharacter 
+        className="top-0 left-0 w-40 h-40 -translate-x-1/4 -translate-y-1/4"
+        color="#FF6B9D"
+      />
+      <BlobCharacter 
+        className="top-0 right-0 w-48 h-48 translate-x-1/4 -translate-y-1/4"
+        color="#FF8FB4"
+        delay="animate-float-delayed"
+      />
+      <BlobCharacter 
+        className="top-20 left-20 w-24 h-24"
+        color="#FFD700"
+      />
+      <BlobCharacter 
+        className="top-16 right-32 w-20 h-20"
+        color="#7B9FFF"
+        delay="animate-float-delayed"
+      />
+
+      {/* Header Navigation */}
+      <nav className="flex justify-between items-center p-4 relative z-10">
+        {/* Left Side Stats */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
+            <Image src="/pepe-coin.png" alt="PEPE" width={20} height={20} className="w-5 h-5" />
+            <span className="text-white font-medium">42.69K</span>
+          </div>
+          <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
+            <Image src="/doge-coin.png" alt="DOGE" width={20} height={20} className="w-5 h-5" />
+            <span className="text-white font-medium">69.42K</span>
+          </div>
+          <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
+            <span>🚀</span>
+            <span className="text-white font-medium">420</span>
+          </div>
         </div>
-        <div className="flex space-x-4">
-          {NAVIGATION_ITEMS.map(item => (
-            <NavigationButton key={item.id} item={item} />
-          ))}
+
+        {/* Right Side Links */}
+        <div className="flex gap-4">
+          <button className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors">
+            <span>🎮</span>
+            Play2Earn
+          </button>
+          <button className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors">
+            <span>🌟</span>
+            Stake
+          </button>
+          <button className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors">
+            <span>🔄</span>
+            Swap
+          </button>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 pt-8 pb-16">
-        {/* Logo and Title */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold text-pink-600 mb-2 animate-bounce">
-            Blobbos
-          </h1>
-          <h2 className="text-4xl font-semibold text-pink-500">
-            Adventure
-          </h2>
+      <main className="container mx-auto px-4 pt-4 pb-16 relative">
+        {/* Decorative Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Stars */}
+          <div className="absolute inset-0 animate-twinkle">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 bg-yellow-200"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  animation: `twinkle ${1 + Math.random() * 2}s infinite`
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* Floating Blobs */}
+          <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-pink-400/50 animate-float" />
+          <div className="absolute top-40 right-20 w-16 h-16 rounded-full bg-yellow-400/50 animate-float-delayed" />
+          <div className="absolute bottom-40 left-1/4 w-24 h-24 rounded-full bg-blue-400/50 animate-float" />
         </div>
 
-        {/* Main Image Section */}
-        <div className="relative w-full h-96 mb-12 rounded-3xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-pink-100">
-            <div className="absolute top-4 right-4 w-8 h-8 text-yellow-400">★</div>
-            <div className="absolute top-12 left-8 w-6 h-6 text-yellow-400">✦</div>
+        {/* Game Scene */}
+        <div className="relative mb-8">
+          {/* Main Logo */}
+          <div className="text-center mb-4">
+            <h1 className="text-6xl font-bold text-white drop-shadow-lg">
+              Blobbos
+            </h1>
+            <h2 className="text-4xl font-semibold text-white drop-shadow-lg">
+              Adventure
+            </h2>
+          </div>
+
+          {/* Main Scene Container */}
+          <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden">
+            <div className="absolute inset-0">
+              <Image
+                src="/blobbos-adventure.png"
+                alt="Blobbos Adventure"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <ProgressBar progress={50} />
+        <div className="max-w-2xl mx-auto mb-8">
+          <div className="h-3 bg-white/30 backdrop-blur-sm rounded-full overflow-hidden">
+            <div className="h-full w-1/2 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full" />
+          </div>
+        </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Game Mode Cards */}
+        <div className="grid grid-cols-4 gap-6 max-w-4xl mx-auto">
           {CARD_ITEMS.map((item) => (
-            <Card 
-              key={item.id} 
-              className="p-6 rounded-3xl bg-white bg-opacity-90 backdrop-blur-sm transform hover:scale-105 transition-all"
-            >
-              <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-${item.color.from} to-${item.color.to} mb-4`} />
-              <h3 className="text-xl font-semibold text-pink-600 mb-2">{item.title}</h3>
-              <p className="text-gray-600">{item.description}</p>
-              <button className="mt-4 w-full py-2 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white font-medium hover:opacity-90 transition-all">
-                Play
-              </button>
-            </Card>
+            <div key={item.id} className="flex flex-col items-center">
+              <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-2">
+                <span className="text-2xl">{item.icon}</span>
+              </div>
+              <Card className="w-full p-4 rounded-2xl bg-white/90 backdrop-blur-sm border-0">
+                <h3 className="text-center text-pink-500 font-medium">{item.title}</h3>
+                <button className="w-full mt-4 py-2 rounded-full bg-pink-400 text-white text-sm hover:bg-pink-500 transition-colors">
+                  Play
+                </button>
+              </Card>
+            </div>
           ))}
         </div>
       </main>
-
-      {/* Floating Blobs */}
-      {FLOATING_BLOBS.map((blob, index) => (
-        <FloatingBlob key={index} {...blob} />
-      ))}
     </div>
   );
 };
