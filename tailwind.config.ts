@@ -21,6 +21,9 @@ export default {
         'float-slow': 'float 10s ease-in-out infinite',
         'twinkle': 'twinkle 3s ease-in-out infinite',
         'squish': 'squish 6s ease-in-out infinite',
+        'window-glow': 'window-glow 4s ease-in-out infinite',
+        'sway': 'sway 3s ease-in-out infinite',
+        'sway-delayed': 'sway 3s ease-in-out 1.5s infinite',
       },
       keyframes: {
         float: {
@@ -39,6 +42,22 @@ export default {
           },
           '50%': {
             transform: 'scale(1.05, 0.95)',
+          },
+        },
+        'window-glow': {
+          '0%, 100%': { 
+            filter: 'brightness(1)',
+          },
+          '50%': { 
+            filter: 'brightness(1.3)',
+          },
+        },
+        'sway': {
+          '0%, 100%': { 
+            transform: 'rotate(0deg)',
+          },
+          '50%': { 
+            transform: 'rotate(5deg)',
           },
         },
       },
